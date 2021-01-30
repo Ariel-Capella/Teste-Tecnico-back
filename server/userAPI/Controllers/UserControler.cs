@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using userAPI.Context;
 using userAPI.Models;
 
 namespace userAPI.Controllers
 {
-    // ADICIONAR UM SERVICE PARA REALIZAR OPERACOES DE BANCO EX "UserService"
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -30,6 +30,15 @@ namespace userAPI.Controllers
         {
             var data = UserDetails.User.Add(newUserEntry);
             UserDetails.SaveChanges();
+            return Ok();
+        }
+
+        [HttpPost("DeleteUser")]
+        public async Task<IActionResult> DeleteUser([FromBody] int userId)
+        {
+            var userToDelete = await UserDetails.User.FindAsync(userId);
+            UserDetails.User.Remove(userToDelete);
+            await UserDetails.SaveChangesAsync();
             return Ok();
         }
     }
